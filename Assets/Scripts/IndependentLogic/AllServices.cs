@@ -92,6 +92,9 @@ namespace TEDinc.SnakeTA
 
             throw new Exception($"Failed to get service of type {typeof(TService)}!");
         }
+
+        public static void Get<TService>(out TService service) where TService : class =>
+            service = Get<TService>();
     }
 
     public interface IServicesProcessor
