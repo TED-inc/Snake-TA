@@ -2,7 +2,7 @@
     "name": "TEDinc.SnakeTA.Input",
     "rootNamespace": "TEDinc.SnakeTA.Input",
     "references": [
-        "TEDinc.SnakeTA.IndependentServices",
+        "TEDinc.SnakeTA.IndependentLogic",
         "TEDinc.SnakeTA.Logic",
         "TEDinc.SnakeTA.View",
         "Unity.InputSystem"

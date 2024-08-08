@@ -1,8 +1,8 @@
 using System;
 
-namespace TEDinc.SnakeTA.Contexts
+namespace TEDinc.SnakeTA.IndependentLogic
 {
-    internal sealed class DisposableServiceProcessor : IServicesProcessor
+    public sealed class DisposableServiceProcessor : IServicesProcessor
     {
         public void Registered(object service) { }
 

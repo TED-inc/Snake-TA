@@ -1,6 +1,6 @@
 {
-    "name": "TEDinc.SnakeTA.IndependentServices",
-    "rootNamespace": "TEDinc.SnakeTA.IndependentServices",
+    "name": "TEDinc.SnakeTA.IndependentLogic",
+    "rootNamespace": "TEDinc.SnakeTA.IndependentLogic",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

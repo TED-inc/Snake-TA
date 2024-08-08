@@ -2,7 +2,7 @@
     "name": "TEDinc.SnakeTA.View",
     "rootNamespace": "TEDinc.SnakeTA.View",
     "references": [
-        "TEDinc.SnakeTA.IndependentServices",
+        "TEDinc.SnakeTA.IndependentLogic",
         "TEDinc.SnakeTA.Logic"
     ],
     "includePlatforms": [],

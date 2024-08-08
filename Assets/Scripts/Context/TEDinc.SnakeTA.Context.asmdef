@@ -2,7 +2,7 @@
     "name": "TEDinc.SnakeTA.Context",
     "rootNamespace": "TEDinc.SnakeTA.Context",
     "references": [
-        "TEDinc.SnakeTA.IndependentServices",
+        "TEDinc.SnakeTA.IndependentLogic",
         "TEDinc.SnakeTA.Logic",
         "TEDinc.SnakeTA.View",
         "TEDinc.SnakeTA.Input"

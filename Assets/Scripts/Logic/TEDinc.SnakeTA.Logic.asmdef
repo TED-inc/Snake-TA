@@ -2,7 +2,7 @@
     "name": "TEDinc.SnakeTA.Logic",
     "rootNamespace": "TEDinc.SnakeTA.Logic",
     "references": [
-        "TEDinc.SnakeTA.IndependentServices"
+        "TEDinc.SnakeTA.IndependentLogic"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

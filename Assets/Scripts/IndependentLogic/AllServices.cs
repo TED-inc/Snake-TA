@@ -36,11 +36,8 @@ namespace TEDinc.SnakeTA
         {
             _instance ??= new AllServices();
 
-            if (_instance._processors.ContainsKey(processor.GetType()))
-                return;
-
-            _instance._processors.Add(processor.GetType(), processor);
-            _instance._removables.AddLast(processor);
+            if (_instance._processors.TryAdd(processor.GetType(), processor))
+                _instance._removables.AddLast(processor);
         }
 
         public static void RemoveProcessor<TProcessor>() where TProcessor : IServicesProcessor => 
@@ -50,11 +47,8 @@ namespace TEDinc.SnakeTA
         {
             _instance ??= new AllServices();
 
-            if (!_instance._processors.ContainsKey(type))
-                return;
-
-            _instance._processors.Remove(type, out IServicesProcessor processor);
-            _instance._removables.Remove(processor);
+            if (_instance._processors.Remove(type, out IServicesProcessor processor))
+                _instance._removables.Remove(processor);
         }
 
         public static void Register<TService>(TService implementation) where TService : class
