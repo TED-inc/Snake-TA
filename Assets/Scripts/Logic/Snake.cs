@@ -10,15 +10,15 @@ namespace TEDinc.SnakeTA.Logic
         public IReadOnlyCollection<Vector2Int> Body => _body;
 
         private readonly LinkedList<Vector2Int> _body;
-        private readonly Vector2Int _fieldSize;
+        private readonly IReadOnlyField _field;
         private Vector2Int _direction;
         private float _movementProgress;
         private float _speed = 1;
 
-        public Snake(IEnumerable<Vector2Int> body, Vector2Int fieldSize)
+        public Snake(IEnumerable<Vector2Int> body, IReadOnlyField field)
         {
             _body = new (body);
-            _fieldSize = fieldSize;
+            _field = field;
         }
 
         public bool TrySetDirection(Vector2Int direction)
@@ -41,15 +41,20 @@ namespace TEDinc.SnakeTA.Logic
                 return null;
 
             _movementProgress %= 1f;
-            Vector2Int nextHead = GetNextHeadPos();
-            IFieldAction action = new FieldActionSet(nextHead, this);
-            _body.AddFirst(nextHead);
+            Vector2Int nextHeadPos = GetNextHeadPos();
+            ICellable nextCell = _field[nextHeadPos];
+
+            if (nextCell != null)
+                return new FieldActionEndGame();
+
+            IFieldAction action = new FieldActionSet(pos: nextHeadPos, setCell: this, executorCell: this);
+            _body.AddFirst(nextHeadPos);
 
             if (_body.Count > 1)
             {
-                Vector2Int prevTail = _body.Last.Value;
+                Vector2Int prevTailPos = _body.Last.Value;
                 _body.RemoveLast();
-                action = new FieldActionSet(prevTail, null, action);
+                action = new FieldActionSet(pos: prevTailPos, setCell: null, executorCell: this, next: action);
             }
 
             return action;
@@ -59,6 +64,6 @@ namespace TEDinc.SnakeTA.Logic
             GetNextHeadPos(_direction);
 
         private Vector2Int GetNextHeadPos(Vector2Int direction) =>
-            FieldUtils.LoopPos(_body.First.Value + direction, _fieldSize);
+            FieldUtils.LoopPos(_body.First.Value + direction, _field.Size);
     }
 }

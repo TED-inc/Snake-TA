@@ -10,7 +10,7 @@ namespace TEDinc.SnakeTA.View
         [SerializeField] private FieldDisplaySnakeHead _snakeHead;
         private FieldService _fieldService;
 
-        private Field Field => _fieldService.Field;
+        private IReadOnlyField Field => _fieldService.Field;
 
         private void Awake()
         {

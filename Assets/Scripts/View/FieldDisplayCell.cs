@@ -9,10 +9,10 @@ namespace TEDinc.SnakeTA.View
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Color _snakeColor = Color.white;
         [SerializeField] private Color _emptyColor = Color.gray;
-        private Field _field;
+        private IReadOnlyField _field;
         private Vector2Int _pos;
 
-        public void Setup(Vector2Int pos, Field field)
+        public void Setup(Vector2Int pos, IReadOnlyField field)
         {
             _field = field;
             _pos = pos;

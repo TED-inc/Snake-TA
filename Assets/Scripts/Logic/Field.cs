@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TEDinc.SnakeTA.IndependentLogic;
 using UnityEngine;
 
 namespace TEDinc.SnakeTA.Logic
 {
-    public sealed class Field
+    public sealed class Field : IReadOnlyField
     {
+        public bool IsGameEnd { get; private set; }
         public Vector2Int Size { get; private set; }
 
         private readonly List<ICellable> _cells = new();
@@ -46,6 +46,7 @@ namespace TEDinc.SnakeTA.Logic
             _cells.Clear();
             _cells.AddRange(Enumerable.Repeat<ICellable>(null, Size.x * Size.y));
             _repeatedCells.Clear();
+            IsGameEnd = false;
         }
 
         public bool IsValidPos(Vector2Int pos) =>
@@ -59,6 +60,9 @@ namespace TEDinc.SnakeTA.Logic
 
         public void Tick(float deltaTime)
         {
+            if (IsGameEnd)
+                return;
+
             foreach (ICellable cell in _repeatedCells.Keys)
                 _actionsQueue.Enqueue(cell.Tick(deltaTime));
             
@@ -66,12 +70,18 @@ namespace TEDinc.SnakeTA.Logic
 
             while (action != null)
             {
-                action.Execute(this);
+                // execute action only if executor cell is at field, or was not specified 
+                if (action.ExecutorCell == null || _repeatedCells.ContainsKey(action.ExecutorCell))
+                    action.Execute(this);
+
                 action = action.Next;
                 if (action == null)
                     _actionsQueue.TryDequeue(out action);
             }
         }
+
+        public void EndGame() => 
+            IsGameEnd = true;
     }
 
     public interface ICellable 
@@ -81,24 +91,43 @@ namespace TEDinc.SnakeTA.Logic
 
     internal sealed class FieldActionSet : IFieldAction
     {
-        public readonly Vector2Int Pos;
-        public readonly ICellable Cell;
+        private readonly Vector2Int _pos;
+        private readonly ICellable _setCell;
         public IFieldAction Next { get; }
+        public ICellable ExecutorCell { get; }
 
-        public FieldActionSet(Vector2Int pos, ICellable cell, IFieldAction next = null)
+        public FieldActionSet(Vector2Int pos, ICellable setCell, ICellable executorCell, IFieldAction next = null)
         {
-            Pos = pos;
-            Cell = cell;
+            _pos = pos;
+            _setCell = setCell;
+            ExecutorCell = executorCell;
             Next = next;
         }
 
         public void Execute(Field field) => 
-            field[Pos] = Cell;
+            field[_pos] = _setCell;
+    }
+
+    internal sealed class FieldActionEndGame : IFieldAction
+    {
+        public IFieldAction Next => null;
+
+        public ICellable ExecutorCell => null;
+
+        public void Execute(Field field) =>
+            field.EndGame();
     }
 
     internal interface IFieldAction
     {
         public IFieldAction Next { get; }
+        public ICellable ExecutorCell { get; }
         public void Execute(Field field);
+    }
+
+    public interface IReadOnlyField
+    {
+        public Vector2Int Size { get; }
+        public ICellable this[Vector2Int pos] { get; }
     }
 }
