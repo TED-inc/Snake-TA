@@ -66,17 +66,18 @@ namespace TEDinc.SnakeTA.Logic
             foreach (ICellable cell in _repeatedCells.Keys)
                 _actionsQueue.Enqueue(cell.Tick(deltaTime));
             
-            _actionsQueue.TryDequeue(out IFieldAction action);
-
-            while (action != null)
+            while (_actionsQueue.Count > 0)
             {
-                // execute action only if executor cell is at field, or was not specified 
-                if (action.ExecutorCell == null || _repeatedCells.ContainsKey(action.ExecutorCell))
-                    action.Execute(this);
+                IFieldAction action = _actionsQueue.Dequeue();
 
-                action = action.Next;
-                if (action == null)
-                    _actionsQueue.TryDequeue(out action);
+                while (action != null)
+                {
+                    // execute action only if executor cell is at field, or was not specified 
+                    if (action.ExecutorCell == null || _repeatedCells.ContainsKey(action.ExecutorCell))
+                        action.Execute(this);
+
+                    action = action.Next;
+                }
             }
         }
 

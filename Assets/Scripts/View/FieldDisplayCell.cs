@@ -8,7 +8,10 @@ namespace TEDinc.SnakeTA.View
     {
         [SerializeField] private SpriteRenderer _spriteRenderer;
         [SerializeField] private Color _snakeColor = Color.white;
+        [SerializeField] private Color _positiveSizeChangerColor = Color.green;
+        [SerializeField] private Color _negativeSizeChangerColor = Color.red;
         [SerializeField] private Color _emptyColor = Color.gray;
+        [SerializeField] private Color _otherColor = Color.black;
         private IReadOnlyField _field;
         private Vector2Int _pos;
 
@@ -22,7 +25,18 @@ namespace TEDinc.SnakeTA.View
         public void Tick()
         {
             ICellable cell = _field[_pos];
-            _spriteRenderer.color = cell is Snake ? _snakeColor : _emptyColor;
+            _spriteRenderer.color = GetColorOfCell(cell);
+        }
+
+        Color GetColorOfCell(ICellable cell)
+        {
+            if (cell is Snake)
+                return _snakeColor;
+            if (cell is SizeChanger sizeChanger)
+                return sizeChanger.Value > 0 ? _positiveSizeChangerColor : _negativeSizeChangerColor;
+            if (cell == null)
+                return _emptyColor;
+            return _otherColor;
         }
     }
 }

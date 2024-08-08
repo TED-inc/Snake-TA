@@ -22,6 +22,11 @@ namespace TEDinc.SnakeTA.Logic
                 _field[bodyPos] = Snake;
             Snake.TrySetDirection(Vector2Int.left);
 
+            _field[new(1, 2)] = new SizeChanger(1);
+            _field[new(7, 2)] = new SizeChanger(10);
+            _field[new(4, 4)] = new SizeChanger(-1);
+            _field[new(8, 4)] = new SizeChanger(-10);
+
             OnStart?.Invoke();
         }
 

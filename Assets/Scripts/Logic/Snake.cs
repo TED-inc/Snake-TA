@@ -44,18 +44,22 @@ namespace TEDinc.SnakeTA.Logic
             Vector2Int nextHeadPos = GetNextHeadPos();
             ICellable nextCell = _field[nextHeadPos];
 
-            if (nextCell != null)
+            if (nextCell is Snake)
                 return new FieldActionEndGame();
 
-            IFieldAction action = new FieldActionSet(pos: nextHeadPos, setCell: this, executorCell: this);
+            IFieldAction action = null;
             _body.AddFirst(nextHeadPos);
 
-            if (_body.Count > 1)
+            int sizeChange = (nextCell as SizeChanger)?.Value ?? 0;
+            int trimTail = Mathf.Clamp(1 - sizeChange, 0, _body.Count - 1);
+            for (int i = 0; i < trimTail; i++)
             {
                 Vector2Int prevTailPos = _body.Last.Value;
                 _body.RemoveLast();
                 action = new FieldActionSet(pos: prevTailPos, setCell: null, executorCell: this, next: action);
             }
+
+            action = new FieldActionSet(pos: nextHeadPos, setCell: this, executorCell: this, next: action);
 
             return action;
         }
