@@ -6,6 +6,9 @@ namespace TEDinc.SnakeTA.Logic
 {
     public sealed class Snake : ICellable
     {
+        public Vector2Int Direction => _direction;
+        public IReadOnlyCollection<Vector2Int> Body => _body;
+
         private readonly LinkedList<Vector2Int> _body;
         private readonly Vector2Int _fieldSize;
         private Vector2Int _direction;
@@ -30,9 +33,9 @@ namespace TEDinc.SnakeTA.Logic
             return true;
         }
 
-        IFieldAction ICellable.Tick()
+        IFieldAction ICellable.Tick(float deltaTime)
         {
-            _movementProgress += _speed * Time.deltaTime;
+            _movementProgress += _speed * deltaTime;
 
             if (_movementProgress < 1f)
                 return null;

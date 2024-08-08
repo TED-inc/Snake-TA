@@ -5,29 +5,37 @@ namespace TEDinc.SnakeTA.View
 {
     internal sealed class FieldDisplay : MonoBehaviour
     {
-        private Field _field;
+        [SerializeField] private Transform _root;
+        [SerializeField] private ItemPool<FieldDisplayCell> _cellsPool;
+        [SerializeField] private FieldDisplaySnakeHead _snakeHead;
+        private FieldService _fieldService;
+
+        private Field Field => _fieldService.Field;
 
         private void Awake()
         {
-            AllServices.Get(out _field);
+            AllServices.Get(out _fieldService);
+            _fieldService.OnStart += SetupField;
         }
 
-        private void OnDrawGizmos()
+        private void Update()
         {
-            if (_field == null)
-                return;
+            foreach (FieldDisplayCell cell in _cellsPool.EnumerateActiveItems())
+                cell.Tick();
+            _snakeHead.Tick();
+        }
 
-            for (int x = 0; x < _field.Size.x; x++)
-                for (int y = 0; y < _field.Size.y; y++)
-                {
-                    Vector2Int pos = new(x, y);
-                    ICellable cell = _field[pos];
-                    Gizmos.color = cell is Snake ? Color.white : Color.gray;
-                    if (cell != null)
-                        Gizmos.DrawCube((Vector2)pos, Vector2.one * 0.95f);
-                    else
-                        Gizmos.DrawWireCube((Vector2)pos, Vector2.one * 0.95f);
-                }
+        private void OnDestroy() => 
+            _fieldService.OnStart -= SetupField;
+
+        private void SetupField()
+        {
+            for (int x = 0; x < Field.Size.x; x++)
+                for (int y = 0; y < Field.Size.y; y++)
+                    _cellsPool.Next().Setup(new (x, y), Field);
+            _cellsPool.FinishIterating();
+            _snakeHead.Setup(_fieldService.Snake);
+            _root.localPosition = (Field.Size - Vector2.one) * -0.5f;
         }
     }
 }

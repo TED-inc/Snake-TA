@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TEDinc.SnakeTA.Logic
 {
-    public sealed class Field : ITickable
+    public sealed class Field
     {
         public Vector2Int Size { get; private set; }
 
@@ -57,10 +57,10 @@ namespace TEDinc.SnakeTA.Logic
         private Exception CreatePosException(Vector2Int pos) =>
             new ArgumentOutOfRangeException($"{pos} is not in {Size}");
 
-        public void Tick()
+        public void Tick(float deltaTime)
         {
             foreach (ICellable cell in _repeatedCells.Keys)
-                _actionsQueue.Enqueue(cell.Tick());
+                _actionsQueue.Enqueue(cell.Tick(deltaTime));
             
             _actionsQueue.TryDequeue(out IFieldAction action);
 
@@ -76,7 +76,7 @@ namespace TEDinc.SnakeTA.Logic
 
     public interface ICellable 
     {
-        internal IFieldAction Tick();
+        internal IFieldAction Tick(float deltaTime);
     }
 
     internal sealed class FieldActionSet : IFieldAction

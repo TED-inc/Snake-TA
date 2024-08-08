@@ -12,15 +12,12 @@ namespace TEDinc.SnakeTA.Contexts
         {
             AllServices.AddProcessor(new DisposableServiceProcessor());
             AllServices.AddProcessor(new TickableServiceProcessor());
-            Field field = new ();
-            field.SetSizeAndClear(new (10, 6));
-            Vector2Int[] snakeBody = new Vector2Int[] { new (4, 2), new (5, 2), new (6, 2) };
-            Snake snake = new (snakeBody, field.Size);
-            foreach (Vector2Int bodyPos in snakeBody)
-                field[bodyPos] = snake;
-            snake.TrySetDirection(Vector2Int.left);
-            AllServices.Register(field);
+            
+            AllServices.Register(new FieldService());
         }
+
+        private void Start() => 
+            AllServices.Get<FieldService>().StartGame();
 
         private void OnDestroy() => 
             AllServices.Clear();
