@@ -1,11 +1,9 @@
 {
-    "name": "TEDinc.SnakeTA.Input",
-    "rootNamespace": "TEDinc.SnakeTA.Input",
+    "name": "TEDinc.SnakeTA.View",
+    "rootNamespace": "TEDinc.SnakeTA.View",
     "references": [
         "TEDinc.SnakeTA.IndependentServices",
-        "TEDinc.SnakeTA.Logic",
-        "TEDinc.SnakeTA.View",
-        "Unity.InputSystem"
+        "TEDinc.SnakeTA.Logic"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
