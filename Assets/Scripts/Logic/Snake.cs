@@ -26,7 +26,7 @@ namespace TEDinc.SnakeTA.Logic
             if (direction.sqrMagnitude != 1)
                 return false;
 
-            if (_body.Count > 1 && GetNextHeadPos() == _body.ElementAt(1))
+            if (_body.Count > 1 && GetNextHeadPos(direction) == _body.ElementAt(1))
                 return false;
 
             _direction = direction;
@@ -56,6 +56,9 @@ namespace TEDinc.SnakeTA.Logic
         }
 
         private Vector2Int GetNextHeadPos() =>
-            FieldUtils.LoopPos(_body.First.Value + _direction, _fieldSize);
+            GetNextHeadPos(_direction);
+
+        private Vector2Int GetNextHeadPos(Vector2Int direction) =>
+            FieldUtils.LoopPos(_body.First.Value + direction, _fieldSize);
     }
 }

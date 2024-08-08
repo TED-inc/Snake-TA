@@ -2,6 +2,7 @@ using UnityEngine;
 using TEDinc.SnakeTA.IndependentLogic;
 using System;
 using TEDinc.SnakeTA.Logic;
+using TEDinc.SnakeTA.Input;
 
 namespace TEDinc.SnakeTA.Contexts
 {
@@ -14,6 +15,7 @@ namespace TEDinc.SnakeTA.Contexts
             AllServices.AddProcessor(new TickableServiceProcessor());
             
             AllServices.Register(new FieldService());
+            AllServices.Register(new InputService());
         }
 
         private void Start() => 
