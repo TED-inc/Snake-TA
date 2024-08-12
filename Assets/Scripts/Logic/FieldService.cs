@@ -26,6 +26,10 @@ namespace TEDinc.SnakeTA.Logic
             _field[new(7, 2)] = new SizeChanger(10);
             _field[new(4, 4)] = new SizeChanger(-1);
             _field[new(8, 4)] = new SizeChanger(-10);
+            _field[new(2, 3)] = new SpeedChanger(2f, 5f);
+            _field[new(8, 3)] = new SpeedChanger(2f, 5f);
+            _field[new(2, 5)] = new SpeedChanger(0.5f, 5f);
+            _field[new(8, 5)] = new SpeedChanger(0.5f, 5f);
 
             OnStart?.Invoke();
         }

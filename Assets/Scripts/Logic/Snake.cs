@@ -10,10 +10,12 @@ namespace TEDinc.SnakeTA.Logic
         public IReadOnlyCollection<Vector2Int> Body => _body;
 
         private readonly LinkedList<Vector2Int> _body;
+        // NOTE: in case of expansion of effect system / more temporary effects - create proper system for handling it
+        private readonly LinkedList<SpeedEffect> _speedEffects = new();
         private readonly IReadOnlyField _field;
         private Vector2Int _direction;
         private float _movementProgress;
-        private float _speed = 1;
+        private float _speed = 1f;
 
         public Snake(IEnumerable<Vector2Int> body, IReadOnlyField field)
         {
@@ -35,7 +37,9 @@ namespace TEDinc.SnakeTA.Logic
 
         IFieldAction ICellable.Tick(float deltaTime)
         {
-            _movementProgress += _speed * deltaTime;
+            float multiplicator = GetSpeedEffectMultiplicatorAndTickEffect(deltaTime);
+
+            _movementProgress += _speed * deltaTime * multiplicator;
 
             if (_movementProgress < 1f)
                 return null;
@@ -47,6 +51,39 @@ namespace TEDinc.SnakeTA.Logic
             if (nextCell is Snake)
                 return new FieldActionEndGame();
 
+            if (nextCell is SpeedChanger speedChanger)
+                _speedEffects.AddFirst(new SpeedEffect(speedChanger));
+
+            return CreateMoveAndSizeChangeFieldAction(nextHeadPos, nextCell);
+        }
+
+        private float GetSpeedEffectMultiplicatorAndTickEffect(float deltaTime)
+        {
+            LinkedListNode<SpeedEffect> speedEffectNode = _speedEffects.First;
+            float multiplicator = 1f;
+
+            while (speedEffectNode != null)
+            {
+                LinkedListNode<SpeedEffect> nextNode = speedEffectNode.Next;
+                SpeedEffect speedEffect = speedEffectNode.Value;
+                speedEffect.Duration -= deltaTime;
+
+                if (speedEffect.Duration < 0f)
+                    _speedEffects.Remove(speedEffectNode);
+                else
+                {
+                    multiplicator *= speedEffect.Multiplicator;
+                    speedEffectNode.Value = speedEffect;
+                }
+
+                speedEffectNode = nextNode;
+            }
+
+            return multiplicator;
+        }
+
+        private IFieldAction CreateMoveAndSizeChangeFieldAction(Vector2Int nextHeadPos, ICellable nextCell)
+        {
             IFieldAction action = null;
             _body.AddFirst(nextHeadPos);
 
@@ -59,9 +96,7 @@ namespace TEDinc.SnakeTA.Logic
                 action = new FieldActionSet(pos: prevTailPos, setCell: null, executorCell: this, next: action);
             }
 
-            action = new FieldActionSet(pos: nextHeadPos, setCell: this, executorCell: this, next: action);
-
-            return action;
+            return new FieldActionSet(pos: nextHeadPos, setCell: this, executorCell: this, next: action);
         }
 
         private Vector2Int GetNextHeadPos() =>
@@ -69,5 +104,17 @@ namespace TEDinc.SnakeTA.Logic
 
         private Vector2Int GetNextHeadPos(Vector2Int direction) =>
             FieldUtils.LoopPos(_body.First.Value + direction, _field.Size);
+
+        private struct SpeedEffect
+        {
+            public readonly float Multiplicator;
+            public float Duration;
+
+            public SpeedEffect(SpeedChanger speedChanger)
+            {
+                Multiplicator = speedChanger.Multiplicator;
+                Duration = speedChanger.Duration;
+            }
+        }
     }
 }
