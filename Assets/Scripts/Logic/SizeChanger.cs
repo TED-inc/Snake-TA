@@ -25,4 +25,10 @@ namespace TEDinc.SnakeTA.Logic
         IFieldAction ICellable.Tick(float deltaTime) =>
             null;
     }
+
+    public sealed class DirectionChanger : ICellable
+    {
+        IFieldAction ICellable.Tick(float deltaTime) =>
+            null;
+    }
 }

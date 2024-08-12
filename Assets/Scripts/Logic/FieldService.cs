@@ -8,6 +8,7 @@ namespace TEDinc.SnakeTA.Logic
     {
         public event Action OnStart;
 
+        public float Speed { get; set; } = 2f;
         public Snake Snake { get; private set; }
         public IReadOnlyField Field => _field;
 
@@ -30,13 +31,12 @@ namespace TEDinc.SnakeTA.Logic
             _field[new(8, 3)] = new SpeedChanger(2f, 5f);
             _field[new(2, 5)] = new SpeedChanger(0.5f, 5f);
             _field[new(8, 5)] = new SpeedChanger(0.5f, 5f);
+            _field[new(0, 2)] = new DirectionChanger();
 
             OnStart?.Invoke();
         }
 
-        public void Tick()
-        {
-            _field.Tick(Time.deltaTime * 2f);
-        }
+        public void Tick() => 
+            _field.Tick(Time.deltaTime * Speed);
     }
 }

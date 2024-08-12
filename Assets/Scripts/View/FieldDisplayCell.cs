@@ -12,6 +12,7 @@ namespace TEDinc.SnakeTA.View
         [SerializeField] private Color _negativeSizeChangerColor = Color.red;
         [SerializeField] private Color _positiveSpeedChangerColor = Color.cyan;
         [SerializeField] private Color _negativeSpeedChangerColor = Color.magenta;
+        [SerializeField] private Color _directionChangerColor = Color.yellow;
         [SerializeField] private Color _emptyColor = Color.gray;
         [SerializeField] private Color _otherColor = Color.black;
         private IReadOnlyField _field;
@@ -38,6 +39,8 @@ namespace TEDinc.SnakeTA.View
                 return sizeChanger.Value > 0f ? _positiveSizeChangerColor : _negativeSizeChangerColor;
             if (cell is SpeedChanger speedChanger)
                 return speedChanger.Multiplicator > 1f ? _positiveSpeedChangerColor : _negativeSpeedChangerColor;
+            if (cell is DirectionChanger)
+                return _directionChangerColor;
             if (cell == null)
                 return _emptyColor;
             return _otherColor;

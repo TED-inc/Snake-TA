@@ -54,7 +54,15 @@ namespace TEDinc.SnakeTA.Logic
             if (nextCell is SpeedChanger speedChanger)
                 _speedEffects.AddFirst(new SpeedEffect(speedChanger));
 
-            return CreateMoveAndSizeChangeFieldAction(nextHeadPos, nextCell);
+            IFieldAction action = CreateMoveAndSizeChangeFieldAction(nextHeadPos, nextCell);
+
+            if (nextCell is DirectionChanger)
+            {
+                ReverseRecoursive(_body);
+                TrySetDirection(_direction * -Vector2Int.one);
+            }
+
+            return action;
         }
 
         private float GetSpeedEffectMultiplicatorAndTickEffect(float deltaTime)
@@ -115,6 +123,17 @@ namespace TEDinc.SnakeTA.Logic
                 Multiplicator = speedChanger.Multiplicator;
                 Duration = speedChanger.Duration;
             }
+        }
+
+        private static void ReverseRecoursive<T>(LinkedList<T> list)
+        {
+            if (list.Count <= 1)
+                return;
+
+            LinkedListNode<T> node = list.First;
+            list.RemoveFirst();
+            ReverseRecoursive(list);
+            list.AddLast(node);
         }
     }
 }
