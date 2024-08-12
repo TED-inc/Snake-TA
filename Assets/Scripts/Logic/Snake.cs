@@ -48,7 +48,7 @@ namespace TEDinc.SnakeTA.Logic
             Vector2Int nextHeadPos = GetNextHeadPos();
             ICellable nextCell = _field[nextHeadPos];
 
-            if (nextCell is Snake)
+            if (nextCell is not null && !FieldUtils.IsEatable(nextCell))
                 return new FieldActionEndGame();
 
             if (nextCell is SpeedChanger speedChanger)

@@ -3,7 +3,8 @@
     "rootNamespace": "TEDinc.SnakeTA.View",
     "references": [
         "TEDinc.SnakeTA.IndependentLogic",
-        "TEDinc.SnakeTA.Logic"
+        "TEDinc.SnakeTA.Logic",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

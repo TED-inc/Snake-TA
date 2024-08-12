@@ -7,6 +7,8 @@ namespace TEDinc.SnakeTA.Logic
 {
     public sealed class Field : IReadOnlyField
     {
+        public event CellSet CellSet;
+
         public bool IsGameEnd { get; private set; }
         public Vector2Int Size { get; private set; }
 
@@ -25,6 +27,9 @@ namespace TEDinc.SnakeTA.Logic
                 ICellable removedCell = _cells[PosToIndex(pos)];
                 ICellable addedCell = value;
 
+                if (removedCell == addedCell)
+                    return;
+
                 if (removedCell != null && --_repeatedCells[removedCell] <= 0)
                     _repeatedCells.Remove(removedCell);
 
@@ -32,6 +37,8 @@ namespace TEDinc.SnakeTA.Logic
 
                 if (addedCell != null && !_repeatedCells.TryAdd(addedCell, 1))
                     _repeatedCells[addedCell]++;
+
+                CellSet?.Invoke(pos, removedCell, addedCell);
             }
         }
 
@@ -128,7 +135,10 @@ namespace TEDinc.SnakeTA.Logic
 
     public interface IReadOnlyField
     {
+        public event CellSet CellSet;
         public Vector2Int Size { get; }
         public ICellable this[Vector2Int pos] { get; }
     }
+
+    public delegate void CellSet(Vector2Int pos, ICellable removed, ICellable added);
 }

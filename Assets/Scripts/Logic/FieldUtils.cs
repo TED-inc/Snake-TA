@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace TEDinc.SnakeTA.Logic
@@ -9,5 +10,10 @@ namespace TEDinc.SnakeTA.Logic
 
         public static int LoopLength(int val, int length) =>
             (val % length + length) % length;
+
+        public static bool IsEatable(ICellable cellable) =>
+            cellable is null ? 
+                throw new ArgumentNullException() :
+                cellable is not Snake;
     }
 }
