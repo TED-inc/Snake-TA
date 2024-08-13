@@ -1,6 +1,5 @@
+using System;
 using TEDinc.SnakeTA.IndependentLogic;
-using Unity.Plastic.Newtonsoft.Json.Serialization;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace TEDinc.SnakeTA.Logic
