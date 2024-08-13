@@ -15,5 +15,8 @@ namespace TEDinc.SnakeTA.Logic
             cellable is null ? 
                 throw new ArgumentNullException() :
                 cellable is not Snake;
+
+        public static bool IsEatableConsumed(ICellable removed, ICellable added) =>
+            removed is not null && IsEatable(removed) && added is Snake;
     }
 }

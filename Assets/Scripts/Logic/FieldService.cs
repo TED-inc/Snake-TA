@@ -1,5 +1,6 @@
 using TEDinc.SnakeTA.IndependentLogic;
 using Unity.Plastic.Newtonsoft.Json.Serialization;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace TEDinc.SnakeTA.Logic
@@ -13,6 +14,10 @@ namespace TEDinc.SnakeTA.Logic
         public IReadOnlyField Field => _field;
 
         private readonly Field _field = new();
+        private readonly FieldFiller _fieldFiller;
+
+        public FieldService() => 
+            _fieldFiller = new(_field);
 
         public void StartGame()
         {
@@ -23,15 +28,7 @@ namespace TEDinc.SnakeTA.Logic
                 _field[bodyPos] = Snake;
             Snake.TrySetDirection(Vector2Int.left);
 
-            _field[new(1, 2)] = new SizeChanger(1);
-            _field[new(7, 2)] = new SizeChanger(10);
-            _field[new(4, 4)] = new SizeChanger(-1);
-            _field[new(8, 4)] = new SizeChanger(-10);
-            _field[new(2, 3)] = new SpeedChanger(2f, 5f);
-            _field[new(8, 3)] = new SpeedChanger(2f, 5f);
-            _field[new(2, 5)] = new SpeedChanger(0.5f, 5f);
-            _field[new(8, 5)] = new SpeedChanger(0.5f, 5f);
-            _field[new(0, 2)] = new DirectionChanger();
+            _fieldFiller.Init();
 
             OnStart?.Invoke();
         }

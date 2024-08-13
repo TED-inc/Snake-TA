@@ -32,7 +32,7 @@ namespace TEDinc.SnakeTA.Logic
 
         private void TryIncreaseScore(Vector2Int pos, ICellable removed, ICellable added)
         {
-            if (removed is not null && FieldUtils.IsEatable(removed) && added is Snake)
+            if (FieldUtils.IsEatableConsumed(removed, added))
                 Score++;
         }
 
