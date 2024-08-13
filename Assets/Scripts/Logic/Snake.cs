@@ -48,8 +48,9 @@ namespace TEDinc.SnakeTA.Logic
             _movementProgress %= BASE_MOVE_DURATION;
             Vector2Int nextHeadPos = GetNextHeadPos();
             ICellable nextCell = _field[nextHeadPos];
+            bool tailChase = nextCell is Snake && nextHeadPos == _body.Last.Value;
 
-            if (nextCell is not null && !FieldUtils.IsEatable(nextCell))
+            if (!tailChase && nextCell is not null && !FieldUtils.IsEatable(nextCell))
                 return new FieldActionEndGame();
 
             if (nextCell is SpeedChanger speedChanger)
@@ -63,7 +64,7 @@ namespace TEDinc.SnakeTA.Logic
                 TrySetDirection(_direction * -Vector2Int.one);
             }
 
-            return action;
+            return tailChase ? null : action;
         }
 
         private float GetSpeedEffectMultiplicatorAndTickEffect(float deltaTime)
