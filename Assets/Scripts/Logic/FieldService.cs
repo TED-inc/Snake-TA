@@ -21,8 +21,10 @@ namespace TEDinc.SnakeTA.Logic
 
         public void StartGame()
         {
+            // note: this magic numbers can be moved to some serializable data holder
             _field.SetSizeAndClear(new(10, 6));
             Vector2Int[] snakeBody = new Vector2Int[] { new(4, 2), new(5, 2), new(6, 2), new(6, 3), new(6, 4) };
+
             Snake = new(snakeBody, _field);
             foreach (Vector2Int bodyPos in snakeBody)
                 _field[bodyPos] = Snake;

@@ -15,7 +15,6 @@ namespace TEDinc.SnakeTA.Logic
         private readonly IReadOnlyField _field;
         private Vector2Int _direction;
         private float _movementProgress;
-        private float _speed = 1f;
 
         public Snake(IEnumerable<Vector2Int> body, IReadOnlyField field)
         {
@@ -37,14 +36,16 @@ namespace TEDinc.SnakeTA.Logic
 
         IFieldAction ICellable.Tick(float deltaTime)
         {
+            const float BASE_MOVE_DURATION = 1f;
+
             float multiplicator = GetSpeedEffectMultiplicatorAndTickEffect(deltaTime);
 
-            _movementProgress += _speed * deltaTime * multiplicator;
+            _movementProgress += deltaTime * multiplicator;
 
-            if (_movementProgress < 1f)
+            if (_movementProgress < BASE_MOVE_DURATION)
                 return null;
 
-            _movementProgress %= 1f;
+            _movementProgress %= BASE_MOVE_DURATION;
             Vector2Int nextHeadPos = GetNextHeadPos();
             ICellable nextCell = _field[nextHeadPos];
 

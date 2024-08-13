@@ -6,6 +6,7 @@ namespace TEDinc.SnakeTA.Logic
 {
     internal sealed class FieldFiller : IDisposable
     {
+        // note: this consts and pool can be moved to some serializable data holder
         private const int INIT_EATABLE_CELLS_COUNT = 2;
         private const int RANDOM_ADD_CELL_ATTEMPT_LIMIT = 10;
         private static readonly RandomPool<ICellable> _eatableRandomPool = new() { 
@@ -15,6 +16,7 @@ namespace TEDinc.SnakeTA.Logic
             { new SpeedChanger(0.5f, 10f), 0.3f },
             { new DirectionChanger(), 0.2f },
         };
+
         private readonly Field _field;
         private readonly Random _random = new();
 
